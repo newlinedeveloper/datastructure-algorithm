@@ -1,2 +1,2 @@
 # datastructure-algorithm
-Datastructure &amp; Algorithm problem solving using Java
+Datastructure &amp; Algorithm problem solving
