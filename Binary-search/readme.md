@@ -192,11 +192,286 @@ You can also try other test cases with different inputs to make sure the functio
 
 #### Problem 4 - Medium : Find Minimum In Rotated Sorted Array
 
+```
+func findMin(nums []int) int {
+    left, right := 0, len(nums)-1
+    
+    // if the array is not rotated
+    if nums[left] < nums[right] {
+        return nums[0]
+    }
+    
+    // binary search for minimum element
+    for left < right {
+        mid := left + (right - left) / 2
+        
+        if nums[mid] > nums[mid+1] {
+            return nums[mid+1]
+        } else if nums[mid] < nums[mid-1] {
+            return nums[mid]
+        } else if nums[mid] > nums[0] {
+            left = mid + 1
+        } else {
+            right = mid - 1
+        }
+    }
+    
+    return -1
+}
+
+
+```
+
+To test this function, you can call it with different arrays and check if it returns the expected output. Here are some examples:
+
+```
+func main() {
+    nums1 := []int{4, 5, 6, 7, 0, 1, 2}
+    fmt.Println(findMin(nums1)) // Expected output: 0
+    
+    nums2 := []int{3, 4, 5, 1, 2}
+    fmt.Println(findMin(nums2)) // Expected output: 1
+    
+    nums3 := []int{1}
+    fmt.Println(findMin(nums3)) // Expected output: 1
+    
+    nums4 := []int{2, 1}
+    fmt.Println(findMin(nums4)) // Expected output: 1
+}
+
+
+```
+
+In the first example, the minimum element in the rotated array {4, 5, 6, 7, 0, 1, 2} is 0.
+
+In the second example, the minimum element in the rotated array {3, 4, 5, 1, 2} is 1.
+
+In the third example, the array {1} is not rotated and the minimum element is 1.
+
+In the fourth example, the array {2, 1} is rotated and the minimum element is 1.
+
+You can also try other test cases with different inputs to make sure the function works correctly.
+
 
 #### Problem 5 - Medium : Search In Rotated Sorted Array
+
+```
+func search(nums []int, target int) int {
+    left, right := 0, len(nums)-1
+    
+    // binary search for target element
+    for left <= right {
+        mid := left + (right - left) / 2
+        
+        if nums[mid] == target {
+            return mid
+        }
+        
+        // if left half is sorted
+        if nums[left] <= nums[mid] {
+            if target >= nums[left] && target < nums[mid] {
+                right = mid - 1
+            } else {
+                left = mid + 1
+            }
+        } else { // right half is sorted
+            if target > nums[mid] && target <= nums[right] {
+                left = mid + 1
+            } else {
+                right = mid - 1
+            }
+        }
+    }
+    
+    return -1
+}
+
+
+
+```
+
+To test this function, you can call it with different arrays and target values and check if it returns the expected output. Here are some examples:
+
+```
+func main() {
+    nums1 := []int{4, 5, 6, 7, 0, 1, 2}
+    target1 := 0
+    fmt.Println(search(nums1, target1)) // Expected output: 4
+    
+    nums2 := []int{4, 5, 6, 7, 0, 1, 2}
+    target2 := 3
+    fmt.Println(search(nums2, target2)) // Expected output: -1
+    
+    nums3 := []int{1}
+    target3 := 0
+    fmt.Println(search(nums3, target3)) // Expected output: -1
+    
+    nums4 := []int{3, 1}
+    target4 := 1
+    fmt.Println(search(nums4, target4)) // Expected output: 1
+}
+
+
+
+```
+
+
+In the first example, the target element 0 is present in the rotated sorted array {4, 5, 6, 7, 0, 1, 2} at index 4.
+
+In the second example, the target element 3 is not present in the rotated sorted array {4, 5, 6, 7, 0, 1, 2} so the function returns -1.
+
+In the third example, the target element 0 is not present in the array {1} so the function returns -1.
+
+In the fourth example, the target element 1 is present in the rotated sorted array {3, 1} at index 1.
+
+You can also try other test cases with different inputs to make sure the function works correctly.
+
+
 
 
 #### Problem 6 - Medium : Time Based Key Value Store
 
+```
+type TimeMap struct {
+    m map[string][]*entry
+}
+
+type entry struct {
+    value     string
+    timestamp int
+}
+
+/** Initialize your data structure here. */
+func Constructor() TimeMap {
+    return TimeMap{m: make(map[string][]*entry)}
+}
+
+func (tm *TimeMap) Set(key string, value string, timestamp int) {
+    tm.m[key] = append(tm.m[key], &entry{value: value, timestamp: timestamp})
+}
+
+func (tm *TimeMap) Get(key string, timestamp int) string {
+    entries := tm.m[key]
+    if entries == nil {
+        return ""
+    }
+
+    // Binary search for the nearest entry with timestamp <= given timestamp
+    lo, hi := 0, len(entries)-1
+    for lo <= hi {
+        mid := lo + (hi-lo)/2
+        if entries[mid].timestamp == timestamp {
+            return entries[mid].value
+        } else if entries[mid].timestamp < timestamp {
+            lo = mid + 1
+        } else {
+            hi = mid - 1
+        }
+    }
+
+    if hi < 0 {
+        return ""
+    }
+
+    return entries[hi].value
+}
+
+
+
+```
+
+The TimeMap struct has a map m that maps keys to arrays of entry structs, each containing a value and a timestamp. The Set method simply appends a new entry to the array for the given key.
+
+The Get method first looks up the array of entries for the given key. It then performs a binary search on that array for the nearest entry with a timestamp less than or equal to the given timestamp. If an exact match is found, it returns the corresponding value. Otherwise, it returns the value from the closest entry with a smaller timestamp. If there are no entries with timestamps less than or equal to the given timestamp, it returns an empty string.
+
+Here's an example usage of the TimeMap struct:
+
+```
+tm := Constructor()
+tm.Set("foo", "bar", 1)    // store the value "bar" for key "foo" with timestamp 1
+tm.Set("foo", "baz", 2)    // store the value "baz" for key "foo" with timestamp 2
+tm.Get("foo", 1)           // returns "bar"
+tm.Get("foo", 3)           // returns "baz"
+tm.Get("foo", 0)           // returns ""
+
+
+```
+
 
 #### Problem 7 - Hard : Median of Two Sorted Arrays
+
+```
+func findMedianSortedArrays(nums1 []int, nums2 []int) float64 {
+    if len(nums1) > len(nums2) {
+        nums1, nums2 = nums2, nums1
+    }
+
+    m, n := len(nums1), len(nums2)
+    left, right := 0, m
+
+    for left <= right {
+        i := (left + right) / 2
+        j := (m+n+1)/2 - i
+
+        if i < m && nums2[j-1] > nums1[i] {
+            left = i + 1
+        } else if i > 0 && nums1[i-1] > nums2[j] {
+            right = i - 1
+        } else {
+            var leftMax int
+            if i == 0 {
+                leftMax = nums2[j-1]
+            } else if j == 0 {
+                leftMax = nums1[i-1]
+            } else {
+                leftMax = max(nums1[i-1], nums2[j-1])
+            }
+
+            if (m+n)%2 == 1 {
+                return float64(leftMax)
+            }
+
+            var rightMin int
+            if i == m {
+                rightMin = nums2[j]
+            } else if j == n {
+                rightMin = nums1[i]
+            } else {
+                rightMin = min(nums1[i], nums2[j])
+            }
+
+            return float64(leftMax+rightMin) / 2.0
+        }
+    }
+
+    return 0.0
+}
+
+func max(a, b int) int {
+    if a > b {
+        return a
+    }
+    return b
+}
+
+func min(a, b int) int {
+    if a < b {
+        return a
+    }
+    return b
+}
+
+
+
+```
+
+This implementation first checks which array is shorter, and sets nums1 to be the shorter array. The variables m and n represent the lengths of nums1 and nums2, respectively.
+
+The implementation then performs a binary search on the indices of nums1 to find the correct position i to divide the two arrays such that the left half of both arrays has a combined length equal to the right half of both arrays.
+
+During the binary search, the implementation checks if the left half of nums1 is smaller than the right half of nums2, and vice versa. If the left half of nums1 is too small, the implementation moves left to the right. If the left half of nums1 is too big, the implementation moves right to the left. If the correct position is found, the implementation computes the median by taking the maximum value of the left halves and the minimum value of the right halves.
+
+The implementation also handles the cases where the median is on the edges of the arrays, or when the combined length of the arrays is odd.
+
+I hope that helps! Let me know if you have any further questions.
+
