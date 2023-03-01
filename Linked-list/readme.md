@@ -663,3 +663,74 @@ func main() {
 
 
 #### Problem 11 -  Hard : Reverse Nodes In K Group
+
+```
+type ListNode struct {
+    Val  int
+    Next *ListNode
+}
+
+func reverseKGroup(head *ListNode, k int) *ListNode {
+    if head == nil {
+        return nil
+    }
+    var prev, curr, next *ListNode = nil, head, nil
+    var count int = 0
+    var newHead *ListNode = nil
+    for curr != nil && count < k {
+        next = curr.Next
+        curr.Next = prev
+        prev = curr
+        curr = next
+        count++
+    }
+    if count == k {
+        newHead = prev
+        head.Next = reverseKGroup(curr, k)
+    } else {
+        newHead = reverseList(prev)
+    }
+    return newHead
+}
+
+func reverseList(head *ListNode) *ListNode {
+    var prev, curr, next *ListNode = nil, head, nil
+    for curr != nil {
+        next = curr.Next
+        curr.Next = prev
+        prev = curr
+        curr = next
+    }
+    return prev
+}
+
+
+```
+
+The ListNode struct is the same as the one used in previous examples.
+
+The reverseKGroup function takes the head of a linked list and an integer k, and reverses the nodes in the list in groups of k. If there are less than k nodes left at the end of the list, those nodes are left as-is.
+
+The function uses two helper functions: reverseList which reverses a linked list, and reverseKGroup which recursively reverses the nodes in groups of k.
+
+Here's an example usage:
+
+
+```
+func main() {
+    // create a linked list
+    head := &ListNode{1, &ListNode{2, &ListNode{3, &ListNode{4, &ListNode{5, nil}}}}}
+
+    // reverse the nodes in groups of 2
+    reversed := reverseKGroup(head, 2)
+
+    // print the reversed list
+    for reversed != nil {
+        fmt.Println(reversed.Val)
+        reversed = reversed.Next
+    }
+}
+
+
+```
+
