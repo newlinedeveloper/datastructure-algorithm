@@ -589,4 +589,77 @@ func main() {
 #### Problem 10 -  Hard : Merge K Sorted Lists
 
 
+```
+type ListNode struct {
+    Val  int
+    Next *ListNode
+}
+
+func mergeKLists(lists []*ListNode) *ListNode {
+    if len(lists) == 0 {
+        return nil
+    }
+    if len(lists) == 1 {
+        return lists[0]
+    }
+    mid := len(lists) / 2
+    left := mergeKLists(lists[:mid])
+    right := mergeKLists(lists[mid:])
+    return mergeTwoLists(left, right)
+}
+
+func mergeTwoLists(l1 *ListNode, l2 *ListNode) *ListNode {
+    dummy := &ListNode{}
+    curr := dummy
+    for l1 != nil && l2 != nil {
+        if l1.Val < l2.Val {
+            curr.Next = l1
+            l1 = l1.Next
+        } else {
+            curr.Next = l2
+            l2 = l2.Next
+        }
+        curr = curr.Next
+    }
+    if l1 != nil {
+        curr.Next = l1
+    }
+    if l2 != nil {
+        curr.Next = l2
+    }
+    return dummy.Next
+}
+
+
+```
+
+The ListNode struct is the same as the one used in previous examples.
+
+The mergeKLists function recursively divides the list of lists in two halves until there is only one or none left, and then merges them using mergeTwoLists function.
+
+The mergeTwoLists function merges two sorted linked lists into a single sorted list.
+
+Here's an example usage:
+
+```
+func main() {
+    // create three sorted linked lists
+    list1 := &ListNode{1, &ListNode{4, &ListNode{5, nil}}}
+    list2 := &ListNode{1, &ListNode{3, &ListNode{4, nil}}}
+    list3 := &ListNode{2, &ListNode{6, nil}}
+
+    // merge the three lists into a single sorted list
+    merged := mergeKLists([]*ListNode{list1, list2, list3})
+
+    // print the merged list
+    for merged != nil {
+        fmt.Println(merged.Val)
+        merged = merged.Next
+    }
+}
+
+
+```
+
+
 #### Problem 11 -  Hard : Reverse Nodes In K Group
