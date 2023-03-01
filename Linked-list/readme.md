@@ -234,19 +234,357 @@ func main() {
 
 #### Problem 5 -  Medium : Copy List With Random Pointer
 
+```
+type Node struct {
+    Val int
+    Next *Node
+    Random *Node
+}
+
+func copyRandomList(head *Node) *Node {
+    if head == nil {
+        return nil
+    }
+    // step 1: duplicate each node and insert it after the original node
+    curr := head
+    for curr != nil {
+        next := curr.Next
+        curr.Next = &Node{Val: curr.Val}
+        curr.Next.Next = next
+        curr = next
+    }
+    // step 2: assign the random pointers for the duplicated nodes
+    curr = head
+    for curr != nil {
+        if curr.Random != nil {
+            curr.Next.Random = curr.Random.Next
+        }
+        curr = curr.Next.Next
+    }
+    // step 3: separate the duplicated nodes from the original nodes
+    dummy := &Node{Val: 0, Next: nil}
+    curr = head
+    copyCurr := dummy
+    for curr != nil {
+        next := curr.Next.Next
+        copyCurr.Next = curr.Next
+        copyCurr = copyCurr.Next
+        curr.Next = next
+        curr = next
+    }
+    return dummy.Next
+}
+
+
+```
+This function takes the head of a linked list with a random pointer as input, and returns a deep copy of the list.
+
+The algorithm consists of three steps:
+
+- Duplicate each node and insert it after the original node.
+- Assign the random pointers for the duplicated nodes.
+- Separate the duplicated nodes from the original nodes.
+
+```
+func main() {
+    // create linked list with random pointers: 1 -> 2 -> 3 -> 4 -> 5
+    head := &Node{Val: 1, Next: &Node{Val: 2, Next: &Node{Val: 3, Next: &Node{Val: 4, Next: &Node{Val: 5, Next: nil}}}}}
+    head.Random = head.Next.Next
+    head.Next.Random = head.Next.Next.Next
+
+    // copy linked list
+    copyHead := copyRandomList(head)
+
+    // print original list
+    for curr := head; curr != nil; curr = curr.Next {
+        fmt.Println(curr.Val, curr.Random)
+    }
+
+    // print copied list
+    for curr := copyHead; curr != nil; curr = curr.Next {
+        fmt.Println(curr.Val, curr.Random)
+    }
+}
+
+
+```
+
 
 #### Problem 6 -  Medium : Add Two Numbers
 
+```
+type ListNode struct {
+    Val int
+    Next *ListNode
+}
+
+func addTwoNumbers(l1 *ListNode, l2 *ListNode) *ListNode {
+    dummy := &ListNode{Val: 0, Next: nil}
+    curr := dummy
+    carry := 0
+    for l1 != nil || l2 != nil {
+        val1, val2 := 0, 0
+        if l1 != nil {
+            val1 = l1.Val
+            l1 = l1.Next
+        }
+        if l2 != nil {
+            val2 = l2.Val
+            l2 = l2.Next
+        }
+        sum := val1 + val2 + carry
+        carry = sum / 10
+        curr.Next = &ListNode{Val: sum % 10, Next: nil}
+        curr = curr.Next
+    }
+    if carry > 0 {
+        curr.Next = &ListNode{Val: carry, Next: nil}
+    }
+    return dummy.Next
+}
+
+
+```
+
+This function takes two linked lists representing non-negative integers as input, and returns a new linked list representing the sum of the input lists.
+
+The algorithm iterates through both lists simultaneously, adding the corresponding nodes together along with any carry from the previous addition. A new node is created to store the sum of the two nodes, and the carry is updated accordingly. Finally, if there is a carry remaining after the last addition, a new node is created to store the carry.
+
+Here's an example usage:
+
+```
+func main() {
+    // create linked lists: 2 -> 4 -> 3 and 5 -> 6 -> 4
+    l1 := &ListNode{Val: 2, Next: &ListNode{Val: 4, Next: &ListNode{Val: 3, Next: nil}}}
+    l2 := &ListNode{Val: 5, Next: &ListNode{Val: 6, Next: &ListNode{Val: 4, Next: nil}}}
+
+    // add two linked lists: 7 -> 0 -> 8
+    sum := addTwoNumbers(l1, l2)
+
+    // print sum
+    for curr := sum; curr != nil; curr = curr.Next {
+        fmt.Println(curr.Val)
+    }
+}
+
+```
+
+
+
 
 #### Problem 7 -  Easy : Linked List Cycle
+
+```
+type ListNode struct {
+    Val int
+    Next *ListNode
+}
+
+func hasCycle(head *ListNode) bool {
+    if head == nil {
+        return false
+    }
+    slow := head
+    fast := head.Next
+    for slow != nil && fast != nil && fast.Next != nil {
+        if slow == fast {
+            return true
+        }
+        slow = slow.Next
+        fast = fast.Next.Next
+    }
+    return false
+}
+
+
+```
+
+This function takes the head of a linked list as input, and returns a boolean indicating whether the list contains a cycle.
+
+The algorithm uses two pointers, slow and fast, to traverse the list. The slow pointer moves one node at a time, while the fast pointer moves two nodes at a time. If there is a cycle in the list, the slow and fast pointers will eventually meet.
+
+Here's an example usage:
+
+
+```
+func main() {
+    // create linked list with cycle: 1 -> 2 -> 3 -> 4 -> 5 -> 2
+    head := &ListNode{Val: 1, Next: &ListNode{Val: 2, Next: &ListNode{Val: 3, Next: &ListNode{Val: 4, Next: &ListNode{Val: 5, Next: nil}}}}}
+    head.Next.Next.Next.Next.Next = head.Next
+
+    // check if linked list has a cycle
+    hasCycle := hasCycle(head)
+    fmt.Println(hasCycle)
+}
+
+
+```
 
 
 
 #### Problem 8 -  Medium : Find The Duplicate Number
 
 
+Finding the duplicate number in a linked list can be done using Floyd's cycle detection algorithm, which is also used to detect cycles in a linked list. Here's an example implementation in Go:
+
+```
+type ListNode struct {
+    Val int
+    Next *ListNode
+}
+
+func findDuplicate(head *ListNode) int {
+    slow := head
+    fast := head
+
+    for fast != nil && fast.Next != nil {
+        slow = slow.Next
+        fast = fast.Next.Next
+        if slow == fast {
+            break
+        }
+    }
+
+    if fast == nil || fast.Next == nil {
+        return -1 // no cycle found
+    }
+
+    slow = head
+    for slow != fast {
+        slow = slow.Next
+        fast = fast.Next
+    }
+
+    return slow.Val // return the value of the duplicate node
+}
+
+
+```
+
+This function takes the head of a linked list as input, and returns the value of the duplicate node in the list.
+
+The algorithm uses two pointers, slow and fast, to detect a cycle in the list. If a cycle is detected, the slow pointer is moved back to the head of the list, and both slow and fast pointers are moved one node at a time until they meet again. The node they meet at is the duplicate node.
+
+Here's an example usage:
+
+
+```
+func main() {
+    // create linked list with duplicate: 1 -> 3 -> 4 -> 2 -> 2
+    head := &ListNode{Val: 1, Next: &ListNode{Val: 3, Next: &ListNode{Val: 4, Next: &ListNode{Val: 2, Next: &ListNode{Val: 2, Next: nil}}}}}
+
+    // find the duplicate number in the linked list
+    duplicate := findDuplicate(head)
+    fmt.Println(duplicate)
+}
+
+
+```
+
+
 #### Problem 9 -  Medium : LRU Cache
 
+
+```
+type Node struct {
+    Key, Val int
+    Prev, Next *Node
+}
+
+type LRUCache struct {
+    Capacity int
+    Map map[int]*Node
+    Head, Tail *Node
+}
+
+func Constructor(capacity int) LRUCache {
+    return LRUCache{
+        Capacity: capacity,
+        Map: make(map[int]*Node),
+        Head: &Node{},
+        Tail: &Node{},
+    }
+}
+
+func (this *LRUCache) Get(key int) int {
+    if node, ok := this.Map[key]; ok {
+        this.moveToFront(node)
+        return node.Val
+    }
+    return -1
+}
+
+func (this *LRUCache) Put(key int, value int) {
+    if node, ok := this.Map[key]; ok {
+        node.Val = value
+        this.moveToFront(node)
+        return
+    }
+    if len(this.Map) == this.Capacity {
+        delete(this.Map, this.Tail.Key)
+        this.removeFromTail()
+    }
+    node := &Node{Key: key, Val: value}
+    this.Map[key] = node
+    this.addToFront(node)
+}
+
+func (this *LRUCache) moveToFront(node *Node) {
+    this.removeFromList(node)
+    this.addToFront(node)
+}
+
+func (this *LRUCache) removeFromTail() {
+    this.removeFromList(this.Tail.Prev)
+}
+
+func (this *LRUCache) removeFromList(node *Node) {
+    node.Prev.Next = node.Next
+    node.Next.Prev = node.Prev
+}
+
+func (this *LRUCache) addToFront(node *Node) {
+    node.Next = this.Head.Next
+    node.Prev = this.Head
+    this.Head.Next.Prev = node
+    this.Head.Next = node
+}
+
+
+```
+This implementation of LRU cache uses a doubly linked list to keep track of the order of nodes, with the most recently used node at the front of the list and the least recently used node at the back of the list. The hash map is used to quickly lookup nodes by their key.
+
+The Get method returns the value of the node with the given key, and moves the node to the front of the list.
+
+The Put method adds a new node with the given key and value to the cache, or updates the value of an existing node. If the cache is at capacity, the least recently used node is removed from the cache.
+
+The moveToFront, removeFromTail, removeFromList, and addToFront methods are used to manipulate the doubly linked list.
+
+Here's an example usage:
+
+```
+func main() {
+    // create LRU cache with capacity 2
+    cache := Constructor(2)
+
+    // add some key-value pairs to the cache
+    cache.Put(1, 1)
+    cache.Put(2, 2)
+
+    // retrieve some values from the cache
+    fmt.Println(cache.Get(1)) // should print 1
+    fmt.Println(cache.Get(2)) // should print 2
+
+    // add another key-value pair to the cache
+    cache.Put(3, 3)
+
+    // the least recently used key (1) should have been removed from the cache
+    fmt.Println(cache.Get(1)) // should print -1
+}
+
+
+
+```
 
 #### Problem 10 -  Hard : Merge K Sorted Lists
 
