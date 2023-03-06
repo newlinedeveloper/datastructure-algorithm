@@ -121,6 +121,62 @@ Maximum depth of the binary tree is: 3
 #### Problem 3 : Diameter of Binary Tree -  Easy
 
 
+```
+type TreeNode struct {
+    Val   int
+    Left  *TreeNode
+    Right *TreeNode
+}
+
+func diameterOfBinaryTree(root *TreeNode) int {
+    if root == nil {
+        return 0
+    }
+    leftHeight := height(root.Left)
+    rightHeight := height(root.Right)
+    leftDiameter := diameterOfBinaryTree(root.Left)
+    rightDiameter := diameterOfBinaryTree(root.Right)
+    return max(leftHeight+rightHeight, max(leftDiameter, rightDiameter))
+}
+
+func height(root *TreeNode) int {
+    if root == nil {
+        return 0
+    }
+    return 1 + max(height(root.Left), height(root.Right))
+}
+
+func max(a, b int) int {
+    if a > b {
+        return a
+    }
+    return b
+}
+
+
+```
+This code defines a TreeNode struct with an integer value, a left child node, and a right child node. The diameterOfBinaryTree function takes a root node as its argument and recursively calculates the diameter of the tree by finding the heights of the left and right subtrees, the diameter of the left and right subtrees, and returning the maximum of the sum of the heights and the diameters of the subtrees. The height function is a helper function that calculates the height of a tree rooted at the given node. The max function is a helper function that returns the maximum of two integers.
+
+Here's an example usage of the function:
+
+```
+func main() {
+    root := &TreeNode{Val: 1, Left: &TreeNode{Val: 2, Left: &TreeNode{Val: 4}, Right: &TreeNode{Val: 5}}, Right: &TreeNode{Val: 3}}
+    diameter := diameterOfBinaryTree(root)
+    fmt.Println("Diameter of the binary tree is:", diameter)
+}
+
+
+```
+
+This code creates a binary tree with the values [1, 2, 3, 4, 5], finds the diameter of the tree using the diameterOfBinaryTree function, and outputs the following:
+
+```
+Diameter of the binary tree is: 3
+
+
+```
+
 #### Problem 4 : Diameter of Binary Tree -  Easy
 
 
