@@ -72,6 +72,51 @@ After inversion:
 
 #### Problem 2 : Maximum Depth of Binary Tree -  Easy
 
+```
+type TreeNode struct {
+    Val   int
+    Left  *TreeNode
+    Right *TreeNode
+}
+
+func maxDepth(root *TreeNode) int {
+    if root == nil {
+        return 0
+    }
+    leftDepth := maxDepth(root.Left)
+    rightDepth := maxDepth(root.Right)
+    if leftDepth > rightDepth {
+        return leftDepth + 1
+    } else {
+        return rightDepth + 1
+    }
+}
+
+
+```
+
+This code defines a TreeNode struct with an integer value, a left child node, and a right child node. The maxDepth function takes a root node as its argument and recursively calculates the maximum depth of the tree by finding the maximum depth of the left and right subtrees and adding 1 for the root node. The function returns the maximum depth of the tree.
+
+Here's an example usage of the function:
+
+
+```
+func main() {
+    root := &TreeNode{Val: 3, Left: &TreeNode{Val: 9}, Right: &TreeNode{Val: 20, Left: &TreeNode{Val: 15}, Right: &TreeNode{Val: 7}}}
+    depth := maxDepth(root)
+    fmt.Println("Maximum depth of the binary tree is:", depth)
+}
+
+
+```
+This code creates a binary tree with the values [3, 9, 20, null, null, 15, 7], finds the maximum depth of the tree using the maxDepth function, and outputs the following:
+
+```
+Maximum depth of the binary tree is: 3
+
+```
+
+
 
 #### Problem 3 : Diameter of Binary Tree -  Easy
 
