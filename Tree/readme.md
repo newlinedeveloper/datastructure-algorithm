@@ -248,4 +248,7 @@ func main() {
 
 ```
 
+
+In this implementation, we define a Node struct to represent the nodes of the binary tree. The diameter function takes a root node as input and recursively calculates the diameter of the binary tree using the height function. The height function calculates the height of the binary tree recursively. The max function returns the maximum of two integers. In the main function, we create a sample binary tree and call the diameter function to find its diameter.
+
 #### Problem 5 : Diameter of Binary Tree -  Easy
