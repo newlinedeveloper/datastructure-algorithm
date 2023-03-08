@@ -180,4 +180,72 @@ Diameter of the binary tree is: 3
 #### Problem 4 : Diameter of Binary Tree -  Easy
 
 
+```
+
+package main
+
+import "fmt"
+
+type Node struct {
+    Left  *Node
+    Right *Node
+}
+
+func diameter(root *Node) int {
+    if root == nil {
+        return 0
+    }
+
+    // calculate the diameter of the left and right subtrees recursively
+    leftDiameter := diameter(root.Left)
+    rightDiameter := diameter(root.Right)
+
+    // calculate the height of the left and right subtrees recursively
+    leftHeight := height(root.Left)
+    rightHeight := height(root.Right)
+
+    // return the maximum of the following three values:
+    // 1) diameter of the left subtree
+    // 2) diameter of the right subtree
+    // 3) the sum of the heights of the left and right subtrees plus 1 (for the current node)
+    return max(leftDiameter, max(rightDiameter, leftHeight+rightHeight+1))
+}
+
+func height(node *Node) int {
+    if node == nil {
+        return 0
+    }
+    // calculate the height of the left and right subtrees recursively
+    leftHeight := height(node.Left)
+    rightHeight := height(node.Right)
+
+    // return the maximum height of the left and right subtrees plus 1 (for the current node)
+    return max(leftHeight, rightHeight) + 1
+}
+
+func max(a, b int) int {
+    if a > b {
+        return a
+    }
+    return b
+}
+
+func main() {
+    root := &Node{
+        Left: &Node{
+            Left: &Node{},
+            Right: &Node{
+                Left:  &Node{},
+                Right: &Node{},
+            },
+        },
+        Right: &Node{},
+    }
+
+    fmt.Println(diameter(root)) // output: 5
+}
+
+
+```
+
 #### Problem 5 : Diameter of Binary Tree -  Easy
