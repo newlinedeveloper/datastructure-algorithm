@@ -252,3 +252,61 @@ func main() {
 In this implementation, we define a Node struct to represent the nodes of the binary tree. The diameter function takes a root node as input and recursively calculates the diameter of the binary tree using the height function. The height function calculates the height of the binary tree recursively. The max function returns the maximum of two integers. In the main function, we create a sample binary tree and call the diameter function to find its diameter.
 
 #### Problem 5 : Diameter of Binary Tree -  Easy
+
+```
+package main
+
+import (
+	"fmt"
+	"math"
+)
+
+type TreeNode struct {
+	Val   int
+	Left  *TreeNode
+	Right *TreeNode
+}
+
+func diameterOfBinaryTree(root *TreeNode) int {
+	diameter := 0
+	calculateDepth(root, &diameter)
+	return diameter
+}
+
+func calculateDepth(node *TreeNode, diameter *int) int {
+	if node == nil {
+		return 0
+	}
+
+	leftDepth := calculateDepth(node.Left, diameter)
+	rightDepth := calculateDepth(node.Right, diameter)
+
+	// Calculate the current diameter
+	*(*diameter) = int(math.Max(float64(*diameter), float64(leftDepth+rightDepth)))
+
+	// Return the depth of the current node
+	return int(math.Max(float64(leftDepth), float64(rightDepth))) + 1
+}
+
+func main() {
+	// Create a sample binary tree
+	root := &TreeNode{Val: 1}
+	root.Left = &TreeNode{Val: 2}
+	root.Right = &TreeNode{Val: 3}
+	root.Left.Left = &TreeNode{Val: 4}
+	root.Left.Right = &TreeNode{Val: 5}
+
+	// Calculate the diameter of the binary tree
+	diameter := diameterOfBinaryTree(root)
+	fmt.Println("Diameter of Binary Tree:", diameter)
+}
+
+```
+In this code, we define a TreeNode struct to represent a node in the binary tree. Each TreeNode has a Val field to store the value and Left and Right pointers to its left and right child nodes, respectively.
+
+The diameterOfBinaryTree function calculates the diameter of the binary tree by recursively traversing the tree and updating the diameter variable. It calls the calculateDepth function, which calculates the depth of each node in the binary tree and updates the diameter if necessary.
+
+The calculateDepth function recursively calculates the depth of each node by calling itself on the left and right subtrees. It uses the math.Max function to compare the left and right depths and update the diameter if the sum of the left and right depths is greater than the current diameter.
+
+Finally, in the main function, we create a sample binary tree by creating TreeNode instances and setting their values and connections. We call the diameterOfBinaryTree function with the root node of the binary tree to calculate the diameter, and then print the result to the console.
+
