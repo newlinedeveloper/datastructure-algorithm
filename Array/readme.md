@@ -248,6 +248,159 @@ In the main function, we provide an example input nums slice and k value. We cal
 
 #### Product of Array Except Self
 
+```
+package main
+
+import "fmt"
+
+func productExceptSelf(nums []int) []int {
+	n := len(nums)
+	result := make([]int, n)
+
+	// Calculate the product of all elements to the left of each index
+	leftProduct := 1
+	for i := 0; i < n; i++ {
+		result[i] = leftProduct
+		leftProduct *= nums[i]
+	}
+
+	// Calculate the product of all elements to the right of each index and multiply with the left product
+	rightProduct := 1
+	for i := n - 1; i >= 0; i-- {
+		result[i] *= rightProduct
+		rightProduct *= nums[i]
+	}
+
+	return result
+}
+
+func main() {
+	nums := []int{1, 2, 3, 4, 5}
+
+	result := productExceptSelf(nums)
+	fmt.Println(result)
+}
+
+```
+In the productExceptSelf function, we create a result slice with the same length as the input nums slice. We initialize a variable leftProduct to store the running product of all elements to the left of each index. We iterate through the nums slice from left to right and store the left product at each index in the result slice.
+
+Next, we calculate the product of all elements to the right of each index and multiply it with the corresponding left product stored in the result slice. We use a variable rightProduct to keep track of the running product from right to left. We iterate through the nums slice from right to left and update the result slice by multiplying the right product with the left product.
+
+Finally, we return the resulting product array.
+
+In the main function, we provide an example input nums slice. We call the productExceptSelf function to calculate the product of array except self and store the result in the result slice. Finally, we print the result to the console.
+
+
 #### Encode and Decode Strings
 
+```
+package main
+
+import (
+	"fmt"
+	"strconv"
+	"strings"
+)
+
+func encode(strings []string) string {
+	result := ""
+	for _, str := range strings {
+		lenStr := strconv.Itoa(len(str))
+		result += lenStr + "#" + str
+	}
+	return result
+}
+
+func decode(str string) []string {
+	result := []string{}
+	strs := strings.Split(str, "#")
+	i := 0
+	for i < len(strs)-1 {
+		lenStr, _ := strconv.Atoi(strs[i])
+		result = append(result, strs[i+1][:lenStr])
+		i += 2
+	}
+	return result
+}
+
+func main() {
+	strings := []string{"hello", "world", "example"}
+
+	encoded := encode(strings)
+	fmt.Println("Encoded:", encoded)
+
+	decoded := decode(encoded)
+	fmt.Println("Decoded:", decoded)
+}
+
+
+```
+In the encode function, we iterate through the input strings slice and for each string, we calculate its length and append it to the result string along with a "#" separator, followed by the actual string. This way, we encode each string as "<length>#<string>".
+
+In the decode function, we split the input str by the "#" separator, resulting in an array of string segments. We iterate through the segments in pairs, where the first segment represents the length of the string and the second segment represents the encoded string. We convert the length to an integer and extract the corresponding substring from the encoded string. This substring is added to the result slice.
+
+In the main function, we provide an example input strings slice. We call the encode function to encode the strings and store the result in the encoded variable. We then print the encoded string. Next, we call the decode function to decode the encoded string and store the result in the decoded variable. Finally, we print the decoded strings to the console
+
+
 #### Longest Consecutive Sequence
+
+```
+package main
+
+import (
+	"fmt"
+)
+
+func longestConsecutive(nums []int) int {
+	numSet := make(map[int]bool)
+	longest := 0
+
+	// Add all numbers to the set
+	for _, num := range nums {
+		numSet[num] = true
+	}
+
+	// Iterate through each number in the set
+	for num := range numSet {
+		// Check if the current number is the start of a sequence
+		if !numSet[num-1] {
+			currNum := num
+			currStreak := 1
+
+			// Find the length of the consecutive sequence
+			for numSet[currNum+1] {
+				currNum++
+				currStreak++
+			}
+
+			// Update the longest streak if necessary
+			if currStreak > longest {
+				longest = currStreak
+			}
+		}
+	}
+
+	return longest
+}
+
+func main() {
+	nums := []int{100, 4, 200, 1, 3, 2, 5}
+
+	longest := longestConsecutive(nums)
+	fmt.Println("Longest Consecutive Sequence:", longest)
+}
+
+```
+In the longestConsecutive function, we use a hashmap (numSet) to store all the numbers from the input nums slice. We iterate through each number in nums and add it to the hashmap. This allows us to quickly check if a number exists in the set with constant time complexity.
+
+Next, we iterate through each number in the numSet hashmap. For each number, we check if it is the start of a sequence by verifying if the previous number (num-1) exists in the hashmap. If it does not exist, we know that the current number is the start of a consecutive sequence.
+
+We then increment currNum and currStreak to find the length of the consecutive sequence. We continue incrementing currNum and updating currStreak as long as the next consecutive number (currNum+1) exists in the hashmap.
+
+After finding the length of the current consecutive sequence, we update the longest variable if the current streak is longer than the previous longest streak.
+
+Finally, we return the longest value, which represents the length of the longest consecutive sequence in the input nums slice.
+
+In the main function, we provide an example input nums slice. We call the longest consecutive function to calculate the length of the longest consecutive sequence and store the result in the longest variable. Finally, we print the longest consecutive sequence to the console.
+
+
