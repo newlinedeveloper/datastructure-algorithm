@@ -583,6 +583,52 @@ Please note that the code assumes valid input, and additional error handling or 
 
 #### Longest Increasing Subsequence
 
+```
+package main
 
+import (
+	"fmt"
+)
+
+func lengthOfLIS(nums []int) int {
+	n := len(nums)
+	dp := make([]int, n)
+	maxLen := 1
+
+	for i := 0; i < n; i++ {
+		dp[i] = 1
+		for j := 0; j < i; j++ {
+			if nums[i] > nums[j] && dp[j]+1 > dp[i] {
+				dp[i] = dp[j] + 1
+				if dp[i] > maxLen {
+					maxLen = dp[i]
+				}
+			}
+		}
+	}
+
+	return maxLen
+}
+
+func main() {
+	nums := []int{10, 9, 2, 5, 3, 7, 101, 18}
+	longest := lengthOfLIS(nums)
+	fmt.Println("Length of Longest Increasing Subsequence:", longest)
+}
+
+
+```
+
+In this code, the lengthOfLIS function takes a slice of integers nums as input and returns the length of the longest increasing subsequence in the given array.
+
+We use the 1D dynamic programming approach to solve this problem. We create a dynamic programming array dp of the same size as the input array nums. Each element dp[i] represents the length of the longest increasing subsequence ending at index i.
+
+We initialize all elements of dp to 1 because the minimum length of an increasing subsequence is always 1 (the element itself). Then, for each index i from 0 to n-1, we iterate through the elements nums[0:i] and check if there exists a smaller element nums[j] (where j is less than i). If nums[i] is greater than nums[j] and the length of the subsequence ending at j plus 1 is greater than the length at i, we update dp[i] with the maximum length.
+
+After iterating through the entire array, we find the maximum value in dp, which represents the length of the longest increasing subsequence.
+
+In the main function, we create an example array nums with values [10, 9, 2, 5, 3, 7, 101, 18]. We call the lengthOfLIS function with this input and print the length of the longest increasing subsequence.
+
+Please note that the code assumes valid input, and additional error handling or checks may be required based on specific requirements.
 
 
