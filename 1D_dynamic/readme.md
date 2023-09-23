@@ -179,77 +179,70 @@ Please note that the code assumes valid input and non-negative amounts in the ho
 
 ```
 package main
-
 import "fmt"
 
 func longestPalindrome(s string) string {
-	n := len(s)
-	if n < 2 {
-		return s
-	}
+    start, end := 0, 0
+    
+    for i := 0; i < len(s); i++ {
+        len1 := expandAroundCenter(s, i, i)
+        len2 := expandAroundCenter(s, i, i+1)
+        
+        maxLen := max(len1, len2)
+        
+        if maxLen > end-start {
+            start = i - (maxLen-1)/2
+            end = i + maxLen/2
+        }
+    }
+    
+    return s[start : end+1]
+}
 
-	start, maxLength := 0, 1
+func max(a, b int) int {
+    if a > b {
+        return a
+    }
+    return b
+}
 
-	// Create a 2D slice to store the palindrome information
-	dp := make([][]bool, n)
-	for i := range dp {
-		dp[i] = make([]bool, n)
-	}
 
-	// Every single character is a palindrome
-	for i := 0; i < n; i++ {
-		dp[i][i] = true
-	}
-
-	// Check for palindromes of length 2
-	for i := 0; i < n-1; i++ {
-		if s[i] == s[i+1] {
-			dp[i][i+1] = true
-			start = i
-			maxLength = 2
-		}
-	}
-
-	// Check for palindromes of length greater than 2
-	for l := 3; l <= n; l++ {
-		for i := 0; i <= n-l; i++ {
-			j := i + l - 1
-			if s[i] == s[j] && dp[i+1][j-1] {
-				dp[i][j] = true
-				start = i
-				maxLength = l
-			}
-		}
-	}
-
-	return s[start : start+maxLength]
+func expandAroundCenter(s string, left int, right int) int {
+    for left >= 0 && right < len(s) && s[left] == s[right] {
+        left--
+        right++
+    }
+    return right -left -1
 }
 
 func main() {
-	str := "babad"
-	longest := longestPalindrome(str)
-	fmt.Println("Longest palindromic substring:", longest)
+    s := "babad"
+    maxStr := longestPalindrome(s) 
+  fmt.Println(maxStr)
 }
 
-
 ```
-In this code, the longestPalindrome function takes a string s and returns the longest palindromic substring. It uses a 1D dynamic programming approach to find the solution.
+Here's a step-by-step explanation of what this code does:
 
-We first handle the base cases where if the length of the string is less than 2, the entire string is a palindrome and we can return it as the result.
+The longestPalindrome function takes an input string s and returns the longest palindromic substring within that string.
 
-We create a 2D slice dp to store the palindrome information. Each element dp[i][j] indicates whether the substring from index i to index j is a palindrome.
+It initializes two variables, start and end, to keep track of the start and end indices of the longest palindrome. Initially, they are set to 0.
 
-We iterate through the string to mark all the single characters as palindromes (dp[i][i] = true).
+The code then enters a loop that iterates through each character in the input string s.
 
-Next, we check for palindromes of length 2 by comparing adjacent characters (s[i] == s[i+1]). If we find a palindrome of length 2, we update the start and maxLength variables accordingly.
+Inside the loop, it calls the expandAroundCenter function twice. This helper function is used to find the length of the palindromic substrings centered at the current character (i). One call is made assuming that the palindrome length is odd (len1), and the other assuming it's even (len2).
 
-Then, we check for palindromes of length greater than 2 using a nested loop. We compare the characters at indices i and j and check if the substring from i+1 to j-1 is also a palindrome (dp[i+1][j-1]). If it is, we mark the current substring as a palindrome and update the start and maxLength variables.
+It calculates the maximum of the two palindrome lengths (maxLen) to determine the longest palindrome that includes the current character.
 
-Finally, we return the longest palindromic substring using the start and maxLength variables.
+If the maxLen is greater than the length of the previously found longest palindrome (which is (end - start)), it updates the start and end indices to include the current palindrome.
 
-In the main function, we create an example string str and call the longestPalindrome function with str. We print the longest palindromic substring obtained.
+The loop continues until all characters in the string have been examined.
 
-Please note that the code assumes valid input. Additional checks and error handling may be required based on specific requirements.
+Finally, the function returns the longest palindromic substring by extracting it from the input string using the start and end indices.
+
+In summary, this code uses the "expand around center" approach to efficiently find the longest palindromic substring in the input string. It maintains a sliding window to track the longest palindrome as it iterates through the string. The helper functions expandAroundCenter and max are used to simplify the logic.
+
+
 
 
 #### Palindromic Substrings
@@ -259,46 +252,68 @@ package main
 
 import "fmt"
 
-func countSubstrings(s string) int {
-	n := len(s)
-	if n < 2 {
-		return n
-	}
+func allPalindromeSubstrings(s string) []string {
+    result := []string{}
 
-	count := 0
+    for i := 0; i < len(s); i++ {
+        // Expand around the current character to find odd-length palindromes.
+        result = append(result, expandAroundCenter(s, i, i)...)
+        
+        // Expand around the current character and the next character to find even-length palindromes.
+        result = append(result, expandAroundCenter(s, i, i+1)...)
+    }
 
-	// Create a 2D slice to store the palindrome information
-	dp := make([]bool, n)
-
-	// Every single character is a palindrome
-	for i := 0; i < n; i++ {
-		dp[i] = true
-		count++
-	}
-
-	// Check for palindromes of length 2
-	for i := 0; i < n-1; i++ {
-		if s[i] == s[i+1] {
-			dp[i+1] = true
-			count++
-		}
-	}
-
-	// Check for palindromes of length greater than 2
-	for l := 3; l <= n; l++ {
-		for i := 0; i <= n-l; i++ {
-			j := i + l - 1
-			if s[i] == s[j] && dp[i+1] {
-				dp[i] = true
-				count++
-			} else {
-				dp[i] = false
-			}
-		}
-	}
-
-	return count
+    return result
 }
+
+// Helper function to expand around the center of a potential palindrome.
+func expandAroundCenter(s string, left int, right int) []string {
+    palindromes := []string{}
+    
+    for left >= 0 && right < len(s) && s[left] == s[right] {
+        // If a palindrome is found, add it to the result.
+        palindromes = append(palindromes, s[left:right+1])
+        
+        // Expand the search.
+        left--
+        right++
+    }
+
+    return palindromes
+}
+
+#without duplicate
+func allPalindromeSubstrings(s string) []string {
+    result := []string{}
+    uniquePalindromes := make(map[string]bool)
+
+    for i := 0; i < len(s); i++ {
+        // Expand around the current character to find odd-length palindromes.
+        findPalindromes(s, i, i, &uniquePalindromes)
+        
+        // Expand around the current character and the next character to find even-length palindromes.
+        findPalindromes(s, i, i+1, &uniquePalindromes)
+    }
+
+    for p := range uniquePalindromes {
+        result = append(result, p)
+    }
+
+    return result
+}
+
+// Helper function to expand around the center of a potential palindrome.
+func findPalindromes(s string, left int, right int, uniquePalindromes *map[string]bool) {
+    for left >= 0 && right < len(s) && s[left] == s[right] {
+        // If a palindrome is found, add it to the uniquePalindromes map.
+        (*uniquePalindromes)[s[left:right+1]] = true
+        
+        // Expand the search.
+        left--
+        right++
+    }
+}
+
 
 func main() {
 	str := "abc"
@@ -331,44 +346,35 @@ Please note that the code assumes valid input. Additional checks and error handl
 
 ```
 package main
-
-import (
-	"fmt"
-	"strconv"
-)
+import "fmt"
 
 func numDecodings(s string) int {
-	n := len(s)
-	if n == 0 || s[0] == '0' {
-		return 0
-	}
-
-	// Create a 1D slice to store the number of decodings
-	dp := make([]int, n+1)
-	dp[0] = 1
-	dp[1] = 1
-
-	for i := 2; i <= n; i++ {
-		// Check if the current character is a valid single-digit number
-		if s[i-1] != '0' {
-			dp[i] += dp[i-1]
-		}
-
-		// Check if the current and previous characters form a valid two-digit number
-		if s[i-2] != '0' && (s[i-2]-'0')*10+(s[i-1]-'0') <= 26 {
-			dp[i] += dp[i-2]
-		}
-	}
-
-	return dp[n]
+    n := len(s)
+    if n == 0 || s[0] == '0' {
+        return 0
+    }
+    dp := make([]int , n+1)
+    dp[0], dp[1] = 1, 1
+    
+    for i := 2; i<= n; i++ {
+        fmt.Println("i => ", i)
+        oneDigit := int(s[i-1] - '0')
+        twoDigits := int((s[i-2] - '0')*10 + (s[i-1]- '0'))
+        if oneDigit >= 1 {
+            dp[i] += dp[i-1]
+        } 
+        
+        if twoDigits >= 10 && twoDigits <= 26 {
+            dp[i] += dp[i-2]
+        }
+    }
+    return dp[n]
 }
-
 func main() {
-	str := "226"
-	decodings := numDecodings(str)
-	fmt.Println("Number of decodings:", decodings)
+    s := "121"
+    max :=numDecodings(s)
+  fmt.Println(max)
 }
-
 
 ```
 
