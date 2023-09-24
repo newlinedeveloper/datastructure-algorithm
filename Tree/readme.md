@@ -310,3 +310,61 @@ The calculateDepth function recursively calculates the depth of each node by cal
 
 Finally, in the main function, we create a sample binary tree by creating TreeNode instances and setting their values and connections. We call the diameterOfBinaryTree function with the root node of the binary tree to calculate the diameter, and then print the result to the console.
 
+#### Same Tree
+
+```
+package main
+
+// Definition for a binary tree node.
+type TreeNode struct {
+	Val   int
+	Left  *TreeNode
+	Right *TreeNode
+}
+
+func isSameTree(p *TreeNode, q *TreeNode) bool {
+	// If both trees are nil, they are the same.
+	if p == nil && q == nil {
+		return true
+	}
+
+	// If one tree is nil and the other is not, they are different.
+	if p == nil || q == nil {
+		return false
+	}
+
+	// Check if the current nodes have the same value.
+	if p.Val != q.Val {
+		return false
+	}
+
+	// Recursively check the left and right subtrees.
+	return isSameTree(p.Left, q.Left) && isSameTree(p.Right, q.Right)
+}
+
+
+```
+
+The TreeNode struct represents a node in a binary tree with an integer value, a left child node, and a right child node.
+
+The isSameTree function takes two binary trees p and q as input and returns a boolean indicating whether they are the same.
+
+If both p and q are nil, it means the current subtrees are the same, so we return true.
+
+If one of p or q is nil while the other is not, it means the trees have different structures, so we return false.
+
+If neither p nor q is nil, we check if the values of the current nodes (p.Val and q.Val) are the same. If they are not equal, the trees are different, and we return false.
+
+Finally, we recursively call the isSameTree function on the left subtrees (p.Left and q.Left) and the right subtrees (p.Right and q.Right) to check if they are the same.
+
+By following this recursive approach, the function will traverse both trees, comparing their values and structures. If the traversal completes without finding any differences, it returns true, indicating that the two trees are the same; otherwise, it returns false.
+
+You can call this function with two binary tree roots to determine if they are the same or not.
+
+
+
+
+
+
+
+
