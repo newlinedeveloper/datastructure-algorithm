@@ -361,6 +361,47 @@ By following this recursive approach, the function will traverse both trees, com
 
 You can call this function with two binary tree roots to determine if they are the same or not.
 
+#### Subtree of another tree
+
+```
+package main
+
+// Definition for a binary tree node.
+type TreeNode struct {
+	Val   int
+	Left  *TreeNode
+	Right *TreeNode
+}
+
+func isSubtree(root *TreeNode, subRoot *TreeNode) bool {
+	if root == nil {
+		return false // If the main tree is empty, no subtree can exist.
+	}
+	// Check if the current subtree rooted at `root` is the same as `subRoot`.
+	if isSameTree(root, subRoot) {
+		return true
+	}
+	// If not, recursively check the left and right subtrees of `root`.
+	return isSubtree(root.Left, subRoot) || isSubtree(root.Right, subRoot)
+}
+
+func isSameTree(p *TreeNode, q *TreeNode) bool {
+	if p == nil && q == nil {
+		return true // Both nodes are nil, they match.
+	}
+	if p == nil || q == nil {
+		return false // One node is nil but the other is not, they don't match.
+	}
+	if p.Val != q.Val {
+		return false // Node values are different, they don't match.
+	}
+	// Recursively check left and right subtrees.
+	return isSameTree(p.Left, q.Left) && isSameTree(p.Right, q.Right)
+}
+
+```
+
+
 
 
 
