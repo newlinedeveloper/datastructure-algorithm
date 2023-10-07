@@ -1,0 +1,53 @@
+### Graph programming
+
+1. No of island problem
+
+```
+
+from collections import deque
+
+def noOfIslands(grid: list[list[str]]):
+    res = 0
+    Row , Col = len(grid), len(grid[0])
+    islandsCount = 0
+    visited = set()
+    
+    def bfs(row:str, col:str):
+        queue = deque()
+        queue.append((row, col))
+        visited.add((row, col))
+        
+        while queue:
+            dr, dc = queue.popleft()
+            directions = [[1,0],[-1,0],[0,1],[0,-1]]
+            for r, c in directions:
+                dRow, dCol = dr+r, dc+c
+                # print(grid[dRow][dCol])
+                
+                if dRow >=0 and dRow < Row and dCol >= 0 and dCol < Col and grid[dRow][dCol] == "1" and (dRow, dCol) not in visited:
+                    # print(grid[dRow][dCol])
+                    queue.append((dRow, dCol))
+                    visited.add((dRow,dCol))
+        
+        # print(row, col)
+    
+    for i in range(Row):
+        for j in range(Col):
+            if grid[i][j] == "1" and (i,j) not in visited:
+                bfs(i, j)
+                islandsCount += 1
+                
+    return islandsCount
+    
+
+
+grid = [
+  ["1","1","0","0","0"],
+  ["1","1","0","0","0"],
+  ["0","0","1","0","0"],
+  ["0","0","0","1","1"]
+]
+
+print(noOfIslands(grid))
+
+```
