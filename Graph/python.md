@@ -51,3 +51,51 @@ grid = [
 print(noOfIslands(grid))
 
 ```
+- 2. Clone Graph
+ 
+```
+
+```
+
+3. Max Area of Island
+
+```
+res = 0
+    Row , Col = len(grid), len(grid[0])
+    islandsCount = 0
+    visited = set()
+    maxIslandArea = 0
+    
+    def bfs(row:str, col:str):
+        queue = deque()
+        queue.append((row, col))
+        visited.add((row, col))
+        islandArea = 1
+        
+        while queue:
+            dr, dc = queue.popleft()
+            directions = [[1,0],[-1,0],[0,1],[0,-1]]
+            for r, c in directions:
+                dRow, dCol = dr+r, dc+c
+                # print(grid[dRow][dCol])
+                
+                if dRow >=0 and dRow < Row and dCol >= 0 and dCol < Col and grid[dRow][dCol] == 1 and (dRow, dCol) not in visited:
+                    # print(grid[dRow][dCol])
+                    queue.append((dRow, dCol))
+                    visited.add((dRow,dCol))
+                    islandArea += 1
+        
+        return islandArea
+        # print(row, col)
+    
+    for i in range(Row):
+        for j in range(Col):
+            if grid[i][j] == 1 and (i,j) not in visited:
+                area = bfs(i, j)
+                islandsCount += 1
+                maxIslandArea = max(maxIslandArea, area)
+                
+    return maxIslandArea
+
+```
+
