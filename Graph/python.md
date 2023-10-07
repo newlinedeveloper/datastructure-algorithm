@@ -123,3 +123,61 @@ res = 0
 
 ```
 
+
+4- Pacific Atlantic Water Flow
+
+```
+
+
+def pacificAtlantic(heights):
+    res = []
+    pac, atl = set(), set()
+    ROWS, COLS = len(heights), len(heights[0]) 
+    
+    def dfs(row, col, visit, prevHeight):
+        if ((row, col) in visit or row < 0 or col < 0 or
+            row == ROWS or
+            col == COLS or
+            heights[row][col] < prevHeight
+            ):
+                return
+            
+        visit.add((row, col))
+        dfs(row+1, col, visit, heights[row][col])
+        dfs(row-1, col, visit, heights[row][col])
+        dfs(row, col+1, visit, heights[row][col])
+        dfs(row, col-1, visit, heights[row][col])
+                
+        
+    # // Calculating pacific ocean reaching cells
+    for C in range(COLS):
+        dfs(0,C, pac, heights[0][C])
+        dfs(ROWS-1, C, atl, heights[ROWS-1][C])
+    
+    
+    # //Calculating Atlantic ocean reaching cells
+    for R in range(ROWS):
+        dfs(R, 0, pac, heights[R][0])
+        dfs(R, COLS-1, atl, heights[R][COLS-1])
+    
+
+    
+    for i in range(ROWS):
+        for j in range(COLS):
+            if (i,j) in atl and (i,j) in pac:
+                res.append([i,j])
+    
+    # for (r,c) in pac:
+    #     if (r,c) in atl:
+    #         res.append([r, c])
+            
+    return res
+    
+    
+heights = [[1,2,2,3,5],[3,2,3,4,4],[2,4,5,3,1],[6,7,1,4,5],[5,1,1,2,4]]
+
+result = pacificAtlantic(heights)
+print(result)
+    
+```
+
