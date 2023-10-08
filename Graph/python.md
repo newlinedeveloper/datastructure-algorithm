@@ -181,3 +181,45 @@ print(result)
     
 ```
 
+5- course schedule - 1
+
+```
+# Online Python compiler (interpreter) to run Python online.
+# Write Python 3 code in this online editor and run it.
+def canFinish(numCourses , prerequisites) -> bool:
+        courseMap = { i:[] for i in range(numCourses)}
+       
+        for i in prerequisites:
+            courseMap[i[0]].append(i[1])
+        print(courseMap)
+        visited = set()
+        
+        def dfs(course):
+            if course in visited:
+                return False
+            if courseMap[course] == []:
+                return True
+            
+            visited.add(course)
+            for c in courseMap[course]:
+                if not dfs(c):
+                    return False
+            visited.remove(course)
+            courseMap[course] = []
+            return True
+            
+        for i in range(numCourses):
+            if not dfs(i):
+                return False
+        return True
+
+
+
+
+numCourses = 3
+prerequisites = [[1,0],[0,1],[1, 2],[2, 3]]
+print(canFinish(numCourses, prerequisites))
+
+
+```
+
