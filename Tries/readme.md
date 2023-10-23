@@ -182,4 +182,117 @@ The Search method searches for a word in the Trie by recursively traversing each
 
 In the main function, we create a new WordDictionary, add some words ("bad", "dad", "mad"), and perform various search operations to demonstrate the functionality of the data structure.
 
+### word search 2
+
+**Problem Description:**
+Given a 2D board of characters and a list of words, find all the words on the board.
+
+**Solution Approach:**
+1. The most common and efficient approach to solving this problem is to use the Trie data structure.
+2. Build a Trie from the list of words you're given.
+3. Traverse the board and, for each cell, see if you can find a word in the Trie.
+4. To do this, you'll use Depth-First Search (DFS) to explore neighboring cells on the board.
+5. Keep track of the current word you're forming while traversing the board.
+6. If you find a word in the Trie, add it to your result list.
+
+**Step-by-Step Implementation:**
+1. Build a Trie from the list of words:
+   - Start with an empty Trie.
+   - Insert each word from the list into the Trie.
+
+2. Traverse the board:
+   - Iterate through each cell on the board.
+   - For each cell, start a DFS traversal.
+   - Keep track of the current word formed while traversing.
+   - For each neighbor cell, check if the combination of letters forms a prefix in the Trie.
+   - If it does, continue the DFS traversal.
+
+3. Implement DFS:
+   - Recursively explore all neighboring cells (up, down, left, and right).
+   - Check if the current word formed so far exists in the Trie:
+     - If it does, add it to your result list.
+   - Mark the cell as visited to avoid using it again in the same word.
+   - Backtrack by unmarking the cell.
+
+4. After traversing the entire board, you will have collected all the words found in the Trie.
+
+5. Return the list of found words.
+
+
+```
+package main
+
+type TrieNode struct {
+	children map[rune]*TrieNode
+	isEnd    bool
+}
+
+func findWords(board [][]byte, words []string) []string {
+	var result []string
+
+	// Build the Trie from the list of words
+	root := &TrieNode{children: make(map[rune]*TrieNode)}
+	for _, word := range words {
+		node := root
+		for _, char := range word {
+			if _, exists := node.children[char]; !exists {
+				node.children[char] = &TrieNode{children: make(map[rune]*TrieNode)}
+			}
+			node = node.children[char]
+		}
+		node.isEnd = true
+	}
+
+	// Perform DFS on the board
+	var dfs func(node *TrieNode, i, j int, path string)
+	dfs = func(node *TrieNode, i, j int, path string) {
+		char := board[i][j]
+		currNode, exists := node.children[rune(char)]
+		if !exists {
+			return
+		}
+
+		path += string(char)
+		if currNode.isEnd {
+			result = append(result, path)
+			currNode.isEnd = false
+		}
+
+		originalChar, board[i][j] = board[i][j], '#'
+		dirs := [][2]int{{1, 0}, {-1, 0}, {0, 1}, {0, -1}}
+		for _, dir := range dirs {
+			x, y := i+dir[0], j+dir[1]
+			if x >= 0 && x < len(board) && y >= 0 && y < len(board[0]) && board[x][y] != '#' {
+				dfs(currNode, x, y, path)
+			}
+		}
+		board[i][j] = originalChar
+	}
+
+	for i := range board {
+		for j := range board[i] {
+			dfs(root, i, j, "")
+		}
+	}
+
+	return result
+}
+
+func main() {
+	// Example usage
+	board := [][]byte{
+		{'o', 'a', 'a', 'n'},
+		{'e', 't', 'a', 'e'},
+		{'i', 'h', 'k', 'r'},
+		{'i', 'f', 'l', 'v'},
+	}
+	words := []string{"oath", "pea", "eat", "rain"}
+	result := findWords(board, words)
+	fmt.Println(result) // Output: ["oath","eat"]
+}
+
+```
+
+
+
 
