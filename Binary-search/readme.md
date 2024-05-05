@@ -193,30 +193,39 @@ You can also try other test cases with different inputs to make sure the functio
 #### Problem 4 - Medium : Find Minimum In Rotated Sorted Array
 
 ```
+package main
+
+import "fmt"
+
 func findMin(nums []int) int {
-    left, right := 0, len(nums)-1
-    
-    // if the array is not rotated
-    if nums[left] < nums[right] {
-        return nums[0]
-    }
-    
-    // binary search for minimum element
-    for left < right {
-        mid := left + (right - left) / 2
-        
-        if nums[mid] > nums[mid+1] {
-            return nums[mid+1]
-        } else if nums[mid] < nums[mid-1] {
-            return nums[mid]
-        } else if nums[mid] > nums[0] {
-            left = mid + 1
-        } else {
-            right = mid - 1
-        }
-    }
-    
-    return -1
+	// Check if the array is empty
+	if len(nums) == 0 {
+		return -1
+	}
+
+	// Initialize left and right pointers
+	left, right := 0, len(nums)-1
+
+	// Perform binary search
+	for left < right {
+		// Calculate the middle index
+		mid := left + (right-left)/2
+
+		// Check if the array is sorted in the left half
+		if nums[mid] < nums[right] {
+			right = mid // Search in the left half (excluding mid)
+		} else {
+			left = mid + 1 // Search in the right half (including mid)
+		}
+	}
+
+	// The minimum element is at index left (or right)
+	return nums[left]
+}
+
+func main() {
+	nums := []int{4, 5, 6, 7, 0, 1, 2}
+	fmt.Println("Minimum element:", findMin(nums)) // Output: 0
 }
 
 
