@@ -291,3 +291,128 @@ Here are the **most important graph problem patterns**:
 
 ---
 
+## 🔟 Most Common Graph Patterns in Google Interviews
+
+| Pattern | Key Topics & What They Test | Sample Google-Style Problems |
+|--------|------------------------------|-------------------------------|
+
+### 1. **Graph Traversal** (DFS/BFS)  
+- Traverse all nodes, simulate behavior, explore regions  
+- Test understanding of recursion and graph modeling
+
+📝 Problems:
+- [Number of Islands](https://leetcode.com/problems/number-of-islands/)  
+- [Clone Graph](https://leetcode.com/problems/clone-graph/)  
+- [Cut Off Trees for Golf Event](https://leetcode.com/problems/cut-off-trees-for-golf-event/) *(Hard)*
+
+---
+
+### 2. **Cycle Detection** (Directed & Undirected)  
+- Verify acyclic structure, detect deadlocks  
+- Often paired with topological sort or dependency analysis
+
+📝 Problems:
+- [Course Schedule](https://leetcode.com/problems/course-schedule/)  
+- [Find Redundant Connection](https://leetcode.com/problems/redundant-connection/)  
+- [Evaluate Division](https://leetcode.com/problems/evaluate-division/)
+
+---
+
+### 3. **Topological Sorting**  
+- Task ordering with prerequisites  
+- Strong conceptual test + algorithmic edge case handling
+
+📝 Problems:
+- [Course Schedule II](https://leetcode.com/problems/course-schedule-ii/)  
+- [Alien Dictionary](https://leetcode.com/problems/alien-dictionary/)  
+- [Parallel Courses](https://leetcode.com/problems/parallel-courses/) *(Google Tag)*
+
+---
+
+### 4. **Shortest Path (Unweighted & Weighted)**  
+- Min-cost traversal in graphs or grids  
+- BFS, Dijkstra, Bellman-Ford usage + heap priority queues
+
+📝 Problems:
+- [Network Delay Time](https://leetcode.com/problems/network-delay-time/)  
+- [Cheapest Flights Within K Stops](https://leetcode.com/problems/cheapest-flights-within-k-stops/)  
+- [Path With Minimum Effort](https://leetcode.com/problems/path-with-minimum-effort/)
+
+---
+
+### 5. **Union-Find (Disjoint Set Union - DSU)**  
+- Component merging, cycle detection, tracking connected groups  
+- Tests your understanding of optimizations like path compression
+
+📝 Problems:
+- [Accounts Merge](https://leetcode.com/problems/accounts-merge/)  
+- [Number of Connected Components](https://leetcode.com/problems/number-of-connected-components-in-an-undirected-graph/)  
+- [Satisfiability of Equality Equations](https://leetcode.com/problems/satisfiability-of-equality-equations/)
+
+---
+
+### 6. **Minimum Spanning Tree (MST)**  
+- Connect all nodes at minimal cost (Kruskal or Prim)  
+- Often hidden in real-world-style problems (like wiring, building roads)
+
+📝 Problems:
+- [Optimize Water Distribution](https://leetcode.com/problems/optimize-water-distribution-in-a-village/)  
+- [Min Cost to Connect All Points](https://leetcode.com/problems/min-cost-to-connect-all-points/)  
+- [Connecting Cities With Minimum Cost](https://leetcode.com/problems/connecting-cities-with-minimum-cost/)
+
+---
+
+### 7. **Grid as Graph**  
+- 2D matrix/grid traversal treated as graph (neighbors = edges)  
+- Common for simulation-style and flood-fill problems
+
+📝 Problems:
+- [Rotting Oranges](https://leetcode.com/problems/rotting-oranges/)  
+- [Walls and Gates](https://leetcode.com/problems/walls-and-gates/)  
+- [Shortest Path in Binary Matrix](https://leetcode.com/problems/shortest-path-in-binary-matrix/)
+
+---
+
+### 8. **Backtracking + Graphs**  
+- Graph used to explore paths, states, or configurations  
+- Think of search problems like mazes, word paths
+
+📝 Problems:
+- [Word Search](https://leetcode.com/problems/word-search/)  
+- [All Paths from Source to Target](https://leetcode.com/problems/all-paths-from-source-to-target/)  
+- [The Maze II](https://leetcode.com/problems/the-maze-ii/)
+
+---
+
+### 9. **Bidirectional / Multi-source BFS**  
+- Optimize performance in huge search space  
+- Often used in social network, grid or word ladder problems
+
+📝 Problems:
+- [Word Ladder II](https://leetcode.com/problems/word-ladder-ii/)  
+- [Perfect Squares](https://leetcode.com/problems/perfect-squares/)  
+- [Bus Routes](https://leetcode.com/problems/bus-routes/)
+
+---
+
+### 10. **Advanced Graph Modeling**  
+- Convert tricky problems into graph format  
+- This is a Google favorite—tests your insight
+
+📝 Problems:
+- [Evaluate Division](https://leetcode.com/problems/evaluate-division/)  
+- [Accounts Merge](https://leetcode.com/problems/accounts-merge/)  
+- [Minimum Genetic Mutation](https://leetcode.com/problems/minimum-genetic-mutation/)
+
+---
+
+## 🔥 Bonus Tip: How Google Tests Graphs
+
+| Area | What They Look For |
+|------|--------------------|
+| Modeling | Can you convert the problem into a graph? |
+| Edge Cases | Can you handle disconnected components, cycles, or self-loops? |
+| Efficiency | Can you optimize using correct data structures (heap, deque, DSU)? |
+| Clarity | Can you explain and justify your approach clearly? |
+
+---
