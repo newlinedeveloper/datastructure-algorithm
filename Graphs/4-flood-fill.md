@@ -165,71 +165,159 @@ func solve(board [][]byte) {
 
 Fill each empty room with the distance to its nearest gate.
 
-### ✅ Sample Input:
-```go
-INF = 2147483647
-rooms = [
-  [INF, -1,  0, INF],
-  [INF, INF, INF, -1],
-  [INF, -1,  INF, -1],
-  [0,   -1,  INF, INF]
+Absolutely! Let's break down **Leetcode #286: Walls and Gates** step by step.
+
+---
+
+## 🧩 Problem Statement: Walls and Gates
+
+You're given a 2D grid (a matrix) where:
+- `INF` (e.g., `2147483647`) represents an **empty room**
+- `-1` represents a **wall or obstacle**
+- `0` represents a **gate**
+
+**Goal**:  
+Fill each empty room with the **distance to its nearest gate**.  
+If a gate is **unreachable**, leave the room as `INF`.
+
+---
+
+### 📌 Example Input:
+
+```txt
+[
+  [INF,  -1,   0,  INF],
+  [INF, INF, INF,  -1],
+  [INF,  -1, INF,  -1],
+  [0,    -1, INF, INF]
 ]
 ```
 
-### ✅ Output:
-```go
+### ✅ Expected Output:
+
+```txt
 [
-  [3, -1,  0, 1],
-  [2,  2, 1, -1],
-  [1, -1, 2, -1],
-  [0, -1, 3, 4]
+  [3,  -1,  0,  1],
+  [2,   2, 1, -1],
+  [1,  -1, 2, -1],
+  [0,  -1, 3,  4]
 ]
 ```
 
 ---
 
-### 🚀 Go Code (Multi-source BFS):
+## 🔍 How to Identify the Pattern?
+
+This problem is a **multi-source BFS** problem:
+
+- You’re spreading values from **multiple gates at once** (each gate acts as a BFS source).
+- You need to calculate the **minimum distance** from the nearest gate to each cell.
+
+💡 This fits the **Flood Fill / Region Expansion** + **Multi-source BFS** pattern.
+
+---
+
+## 🧠 Solution Approach
+
+### BFS from All Gates (0s):
+
+1. **Initialize a queue** with all the gate coordinates `(i, j)` (cells that have `0`)
+2. Perform **BFS** from all gates simultaneously
+3. For each `empty room (INF)` you reach, **update it with `distance + 1`**
+4. Avoid visiting walls `(-1)` or revisiting visited cells
+
+---
+
+## ✅ Go Code Implementation
 
 ```go
+package main
+
+import (
+	"fmt"
+)
+
+const INF = 2147483647
+
 func wallsAndGates(rooms [][]int) {
-    if len(rooms) == 0 {
-        return
-    }
+	if len(rooms) == 0 || len(rooms[0]) == 0 {
+		return
+	}
 
-    rows, cols := len(rooms), len(rooms[0])
-    queue := [][2]int{}
-    directions := [4][2]int{{0, 1}, {1, 0}, {0, -1}, {-1, 0}}
+	rows, cols := len(rooms), len(rooms[0])
+	queue := [][]int{}
 
-    // Add all gates to queue
-    for r := 0; r < rows; r++ {
-        for c := 0; c < cols; c++ {
-            if rooms[r][c] == 0 {
-                queue = append(queue, [2]int{r, c})
-            }
-        }
-    }
+	// Step 1: Push all gates into the queue
+	for r := 0; r < rows; r++ {
+		for c := 0; c < cols; c++ {
+			if rooms[r][c] == 0 {
+				queue = append(queue, []int{r, c})
+			}
+		}
+	}
 
-    // BFS from all gates
-    for len(queue) > 0 {
-        r, c := queue[0][0], queue[0][1]
-        queue = queue[1:]
+	directions := [][]int{{0, 1}, {1, 0}, {0, -1}, {-1, 0}}
 
-        for _, d := range directions {
-            nr, nc := r + d[0], c + d[1]
-            if nr >= 0 && nr < rows && nc >= 0 && nc < cols && rooms[nr][nc] == 2147483647 {
-                rooms[nr][nc] = rooms[r][c] + 1
-                queue = append(queue, [2]int{nr, nc})
-            }
-        }
-    }
+	// Step 2: BFS
+	for len(queue) > 0 {
+		point := queue[0]
+		queue = queue[1:]
+		r, c := point[0], point[1]
+
+		for _, dir := range directions {
+			nr, nc := r+dir[0], c+dir[1]
+			if nr < 0 || nc < 0 || nr >= rows || nc >= cols || rooms[nr][nc] != INF {
+				continue
+			}
+			rooms[nr][nc] = rooms[r][c] + 1
+			queue = append(queue, []int{nr, nc})
+		}
+	}
 }
 ```
 
-### 🧠 Explanation:
-- Multi-source **BFS** from all gates (`0` values).
-- At each step, propagate distance to neighboring `INF` cells.
+---
+
+## 🧪 Sample Run
+
+### Input:
+
+```go
+rooms := [][]int{
+	{INF, -1, 0, INF},
+	{INF, INF, INF, -1},
+	{INF, -1, INF, -1},
+	{0, -1, INF, INF},
+}
+wallsAndGates(rooms)
+fmt.Println(rooms)
+```
+
+### Output:
+
+```go
+[
+  [3, -1, 0, 1],
+  [2,  2, 1, -1],
+  [1, -1, 2, -1],
+  [0, -1, 3, 4],
+]
+```
 
 ---
+
+## 📌 Summary
+
+| Concept | Description |
+|--------|-------------|
+| **Pattern** | Multi-source BFS |
+| **When to use** | Multiple starting points spreading out |
+| **Why BFS** | Because we need **minimum steps** (shortest distance) |
+| **Trick** | Add all gates (0s) to the queue first |
+
+---
+
+Want me to generate a visual diagram for this? Or the DFS version (less efficient)?
 
 ## 📚 Summary Table
 
